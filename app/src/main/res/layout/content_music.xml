@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="hk.ust.cse.comp4521.musicplayer.MusicActivity"
+    tools:showIn="@layout/activity_music">
+
+    <TextView
+        android:id="@+id/songTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Song Title"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_btn_prev"
+            android:id="@+id/prev"
+            android:layout_weight="1"
+            android:background="@null" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_rewind"
+            android:id="@+id/rewind"
+            android:layout_weight="1"
+            android:background="@null" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_play"
+            android:id="@+id/play"
+            android:layout_weight="1"
+            android:background="@null" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_forward"
+            android:id="@+id/forward"
+            android:layout_weight="1"
+            android:background="@null" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_next"
+            android:id="@+id/next"
+            android:layout_weight="1"
+            android:background="@null" />
+
+    </LinearLayout>
+
+</RelativeLayout>

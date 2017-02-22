@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="hk.ust.cse.comp4521.musicplayer.MusicActivity">
+    <item android:id="@+id/action_playlist"
+        android:icon="@drawable/btn_playlist"
+        app:showAsAction="ifRoom"
+        android:title="Playlist"/>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+</menu>
