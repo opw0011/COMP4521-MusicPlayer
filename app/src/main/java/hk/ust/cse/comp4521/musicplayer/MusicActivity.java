@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -24,13 +25,15 @@ import hk.ust.cse.comp4521.musicplayer.player.MusicPlayer;
 import hk.ust.cse.comp4521.musicplayer.player.PlayerState;
 import hk.ust.cse.comp4521.musicplayer.player.Playlist;
 
-public class MusicActivity extends AppCompatActivity implements View.OnClickListener, Observer {
+public class MusicActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, Observer {
 
     private static final String TAG = "MusicPlayer";
     private static ImageButton playerButton, rewindButton, forwardButton;
     public static Handler handler;
-    private TextView songTitleText;
+    private TextView songTitleText, curTime, remTime;
     private static int songIndex = 0;
+    private SeekBar songProgressBar;
+
 
     /*
      * Class Name: MusicPlayer
@@ -81,12 +84,26 @@ public class MusicActivity extends AppCompatActivity implements View.OnClickList
         //	get	a	reference	to	the	song	title	TextView	in	the	UI
         songTitleText = (TextView) findViewById(R.id.songTitle);
 
+        // get reference to the SeekBar, completion time and remaining time.
+        songProgressBar = (SeekBar) findViewById(R.id.songProgressBar);
+        //set max to 100, means that complete song has been played
+        songProgressBar.setMax(100);
+        //initializing SeekBarChangeListener songProgressBar.setOnSeekBarChangeListener(this);
+        curTime= (TextView) findViewById(R.id.tvSongCurrentDuration);
+        remTime = (TextView) findViewById(R.id.tvSongRemainingDuration);
+
+        handler = new Handler();
+
         // create a new instance of the music player
         player = MusicPlayer.getMusicPlayer();
         player.setContext(this);
         player.addObserver(this);
 
         startSong(songIndex);
+
+        setProgress(player.progress());
+        curTime.setText(player.completedTime());
+        remTime.setText("-" + player.remainingTime());
 
     }
 
@@ -218,25 +235,72 @@ public class MusicActivity extends AppCompatActivity implements View.OnClickList
                 Log.i(TAG, "Activity: Player State Changed to Ready");
                 songTitleText.setText(player.getSongTitle());
                 playerButton.setImageResource(R.drawable.img_btn_play);
+                songProgressBar.setProgress(player.progress());
+                curTime.setText(player.completedTime());
+                remTime.setText("-" + player.remainingTime());
                 break;
             case Paused:
                 Log.i(TAG, "Activity: Player State Changed to Paused");
                 playerButton.setImageResource(R.drawable.img_btn_play);
+                cancelUpdateSongProgress();
+                songProgressBar.setProgress(player.progress());
+                curTime.setText(player.completedTime());
+                remTime.setText("-" + player.remainingTime());
                 break;
             case Stopped:
                 Log.i(TAG, "Activity: Player State Changed to Stopped");
                 playerButton.setImageResource(R.drawable.img_btn_play);
+                cancelUpdateSongProgress();
                 break;
             case Playing:
                 Log.i(TAG, "Activity: Player State Changed to Playing");
                 playerButton.setImageResource(R.drawable.img_btn_pause);
+                updateSongProgress();
                 break;
             case Reset:
                 Log.i(TAG, "Activity: Player State Changed to Reset");
                 playerButton.setImageResource(R.drawable.img_btn_play);
+                cancelUpdateSongProgress();
                 break;
             default:
                 break;
         }
     }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    public void updateSongProgress() {
+        handler.postDelayed(songProgressUpdate, 500);
+        playerButton.setImageResource(R.drawable.img_btn_pause);
+    }
+
+    public void cancelUpdateSongProgress() {
+        handler.removeCallbacks(songProgressUpdate);
+        playerButton.setImageResource(R.drawable.img_btn_play);
+    }
+
+    private Runnable songProgressUpdate = new Runnable() {
+        @Override
+        public void run() {
+            songProgressBar.setProgress(player.progress());
+            curTime.setText(player.completedTime());
+            remTime.setText("-" + player.remainingTime());
+
+            // schedule another update for every 500 msec later
+            handler.postDelayed(songProgressUpdate, 500);
+        }
+    };
 }
